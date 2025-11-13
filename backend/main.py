@@ -19,10 +19,15 @@ from schemas import LoginRequest, TokenResponse
 
 settings = get_settings()
 
-# Configurar base de datos
-sqlite_url = f"sqlite:///{settings.database_url.replace('sqlite:///', '')}"
-connect_args = {"check_same_thread": False}
-engine = create_engine(sqlite_url, echo=True, connect_args=connect_args)
+# Configurar base de datos PostgreSQL
+engine = create_engine(
+    settings.database_url,
+    echo=True,
+    future=True,
+    pool_pre_ping=True,
+    pool_size=10,
+    max_overflow=20,
+)
 
 def create_db_and_tables():
     """Crea las tablas en la base de datos"""

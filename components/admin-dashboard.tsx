@@ -1,5 +1,4 @@
 "use client"
-
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -16,6 +15,8 @@ import {
   TrendingUp,
   Clock,
   Activity,
+  Map,
+  BarChart3,
 } from "lucide-react"
 import { ShelterManager } from "@/components/shelter-manager"
 import { EventManager } from "@/components/event-manager"
@@ -23,6 +24,7 @@ import { UserManager } from "@/components/user-manager"
 import { RiskAlerts } from "@/components/risk-alerts"
 import { ShelterDetails } from "@/components/shelter-details"
 import { UserProfile } from "@/components/user-profile"
+import { ResearchersView } from "@/components/researchers-view"
 
 interface AdminDashboardProps {
   user: { username: string; role: string } | null
@@ -46,6 +48,8 @@ export function AdminDashboard({ user, onLogout }: AdminDashboardProps) {
         return <ShelterDetails />
       case "profile":
         return <UserProfile user={user} />
+      case "researchers":
+        return <ResearchersView />
       default:
         return <DashboardOverview onNavigate={setActiveView} />
     }
@@ -138,6 +142,15 @@ export function AdminDashboard({ user, onLogout }: AdminDashboardProps) {
               <AlertTriangle className="w-4 h-4 mr-2" />
               Alerts
             </Button>
+            {/* Nuevo botón para Researchers */}
+            <Button
+              variant={activeView === "researchers" ? "default" : "ghost"}
+              onClick={() => setActiveView("researchers")}
+              className="whitespace-nowrap"
+            >
+              <Map className="w-4 h-4 mr-2" />
+              Researchers
+            </Button>
           </div>
         </div>
       </nav>
@@ -148,6 +161,7 @@ export function AdminDashboard({ user, onLogout }: AdminDashboardProps) {
   )
 }
 
+// SOLO UNA DEFINICIÓN de DashboardOverview
 function DashboardOverview({ onNavigate }: { onNavigate: (view: string) => void }) {
   return (
     <div className="space-y-6">
@@ -197,14 +211,16 @@ function DashboardOverview({ onNavigate }: { onNavigate: (view: string) => void 
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-destructive/10 to-destructive/5 border-destructive/20">
+        <Card className="bg-gradient-to-br from-blue-500/10 to-blue-500/5 border-blue-500/20">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active Alerts</CardTitle>
-            <AlertTriangle className="h-5 w-5 text-destructive" />
+            <CardTitle className="text-sm font-medium">Research Data</CardTitle>
+            <BarChart3 className="h-5 w-5 text-blue-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-destructive">3</div>
-            <p className="text-xs text-muted-foreground mt-1">Require immediate attention</p>
+            <div className="text-3xl font-bold text-blue-500">15.2K</div>
+            <p className="text-xs text-muted-foreground mt-1">
+              Data points collected
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -238,6 +254,20 @@ function DashboardOverview({ onNavigate }: { onNavigate: (view: string) => void 
             </div>
             <CardTitle>Issue Alert</CardTitle>
             <CardDescription>Notify about risk events</CardDescription>
+          </CardHeader>
+        </Card>
+
+        {/* Nueva acción para Researchers */}
+        <Card 
+          className="hover:shadow-lg transition-shadow cursor-pointer" 
+          onClick={() => onNavigate("researchers")}
+        >
+          <CardHeader>
+            <div className="w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center mb-2">
+              <Map className="w-6 h-6 text-blue-500" />
+            </div>
+            <CardTitle>Research Portal</CardTitle>
+            <CardDescription>Access analytics and heatmaps</CardDescription>
           </CardHeader>
         </Card>
       </div>
